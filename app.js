@@ -255,25 +255,34 @@
       metalnessValue.textContent = Number(metalnessRange.value).toFixed(2);
     });
 
-    // 材质库目录
+    // 材质库目录 - 点击展开/收起 + 筛选
     document.querySelectorAll(".lib-folder .folder-item").forEach(item => {
       item.addEventListener("click", function (e) {
         e.stopPropagation();
         const folder = this.closest(".lib-folder");
+        const isClickingSame = this.classList.contains("active");
+        const folderName = folder.dataset.folder;
+
+        // 切换 active 状态
+        document.querySelectorAll(".lib-folder .folder-item").forEach(i => i.classList.remove("active"));
+        this.classList.add("active");
+
+        // 筛选对应材质的文件夹
+        document.querySelectorAll(".asset").forEach(asset => {
+          if (folderName === "all") {
+            asset.style.display = "flex";
+          } else {
+            asset.style.display = asset.dataset.folder === folderName ? "flex" : "none";
+          }
+        });
+
+        // 展开/收起文件夹
         folder.classList.toggle("collapsed");
       });
     });
 
-    document.querySelectorAll(".lib-item:not(.folder-item)").forEach(item => {
-      item.addEventListener("click", function () {
-        document.querySelectorAll(".lib-item").forEach(i => i.classList.remove("active"));
-        item.classList.add("active");
-        const folder = item.dataset.folder;
-        document.querySelectorAll(".asset").forEach(asset => {
-          asset.style.display = folder === "all" || asset.dataset.folder === folder ? "flex" : "none";
-        });
-      });
-    });
+    // 默认展开"所有材质"文件夹
+    document.querySelector('.lib-folder[data-folder="all"]')?.classList.remove("collapsed");
 
     // 顶部按钮
     document.getElementById("saveBtn").addEventListener("click", function () {

@@ -342,10 +342,10 @@
       background:rgba(255,255,255,.05);
     }
     .lib-item.active{background:rgba(37,99,235,.2);color:#fff}
-    .lib-folder .folder-item{padding-left:12px}
-    .lib-folder .caret{font-size:10px;color:var(--sub)}
-    .lib-folder.collapsed .caret{transform:rotate(-90deg)}
-    .lib-folder.collapsed .caret{transition:.2s}
+    .lib-folder .folder-item{padding-left:12px;margin:2px 8px}
+    .lib-folder > .lib-item:first-child{margin:2px 8px 2px 4px}
+    .lib-folder .caret{font-size:10px;color:var(--sub);transition:.2s}
+    .lib-folder.collapsed > .lib-item .caret{transform:rotate(-90deg)}
     .lib-item .icon{width:16px;height:16px;display:inline-block;vertical-align:middle}
     .lib-item .icon.folder{background:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23fbbf24"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>') center/contain no-repeat}
     .assets{
