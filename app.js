@@ -182,10 +182,19 @@
       face.addEventListener("dragover", function (e) {
         e.preventDefault();
         face.classList.add("drop-over");
+        const faceKey = face.dataset.face;
+        // 实时预览：显示该面信息，左侧节点高亮
+        previewFace(faceKey);
       });
 
       face.addEventListener("dragleave", function () {
         face.classList.remove("drop-over");
+        // 离开时恢复之前选中的面
+        if (selectedFace) {
+          selectFace(selectedFace);
+        } else {
+          hidePanel();
+        }
       });
 
       face.addEventListener("drop", function (e) {
@@ -201,6 +210,33 @@
         selectFace(faceKey);
       });
     });
+
+    // 实时预览函数
+    function previewFace(faceKey) {
+      const item = state[faceKey];
+      // 显示面板
+      emptyState.style.display = "none";
+      propPanel.classList.add("visible");
+      // 更新面板内容
+      selectedFaceTag.textContent = faceCN[faceKey];
+      selectedNodeName.textContent = item.nodeTitle;
+      selectedNodePath.textContent = item.path;
+      selectedBall.style.background = item.color;
+      selectedMaterialName.textContent = item.materialName;
+      colorPicker.value = item.color;
+      colorText.value = item.color.toUpperCase();
+      roughnessRange.value = item.roughness;
+      roughnessValue.textContent = Number(item.roughness).toFixed(2);
+      metalnessRange.value = item.metalness;
+      metalnessValue.textContent = Number(item.metalness).toFixed(2);
+      tipsText.textContent = "预览：拖拽到此处将应用「" + item.materialName + "」材质";
+      // 高亮左侧对应节点
+      resetActiveStyles();
+      const meshEl = document.querySelector('.tree-row.mesh[data-face="' + faceKey + '"]');
+      if (meshEl) meshEl.classList.add("active");
+      faceEls.forEach(f => f.classList.remove("active"));
+      face.classList.add("active");
+    }
 
     // 材质资产拖拽
     document.querySelectorAll(".asset").forEach(asset => {
