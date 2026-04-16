@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>功能更新：新增材质编辑</title>
+    <style>
+        :root {
+            --primary-text: #1f2937;
+            --secondary-text: #4b5563;
+            --muted-text: #9ca3af;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --accent-orange: #e56840;
+            --accent-orange-hover: #cc5935;
+            --accent-blue: #3b82f6;
+            --accent-blue-hover: #2563eb;
+            --border-color: #e5e7eb;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-text);
+            line-height: 1.6;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        /* 结构化内容样式 */
+        .content-block {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .main-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--accent-blue);
+            display: inline-block;
+        }
+
+        .section-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.75rem 0;
+            color: var(--primary-text);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-title::before {
+            content: "";
+            display: block;
+            width: 4px;
+            height: 16px;
+            background-color: var(--accent-blue);
+            border-radius: 2px;
+        }
+
+        .conclusion-text {
+            font-size: 1rem;
+            color: var(--secondary-text);
+            background: #eff6ff;
+            padding: 1rem;
+            border-radius: 6px;
+            border-left: 4px solid var(--accent-blue);
+        }
+
+        .action-list {
+            list-style: none;
+        }
+
+        .action-list li {
+            position: relative;
+            padding-left: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--secondary-text);
+        }
+
+        .action-list li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--accent-blue);
+            font-weight: bold;
+        }
+
+        /* UI 演示区域样式 */
+        .ui-demo-wrapper {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .ui-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 1.125rem;
+            font-weight: 500;
+        }
+
+        .ui-header .close-btn {
+            color: var(--muted-text);
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+
+        .ui-body {
+            display: flex;
+            padding: 1.5rem;
+            gap: 2rem;
+        }
+
+        .ui-preview {
+            flex: 0 0 500px;
+            height: 500px;
+            background-color: #e5e5e5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .ui-preview::after {
+            content: "模型预览区 (枪机2)";
+            color: var(--muted-text);
+            font-size: 1.25rem;
+        }
+
+        .ui-details {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .ui-actions {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+            color: white;
+        }
+
+        .btn-orange {
+            background-color: var(--accent-orange);
+        }
+
+        .btn-orange:hover {
+            background-color: var(--accent-orange-hover);
+        }
+
+        .btn-blue {
+            background-color: var(--accent-blue);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+
+        .btn-blue:hover {
+            background-color: var(--accent-blue-hover);
+        }
+
+        .ui-metadata-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .ui-label {
+            color: var(--muted-text);
+            width: 60px;
+        }
+
+        .ui-tag {
+            padding: 0.125rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.75rem;
+        }
+
+        .tag-blue {
+            color: #3b82f6;
+            border: 1px solid #93c5fd;
+            background: #eff6ff;
+        }
+
+        .tag-green {
+            color: #10b981;
+            border: 1px solid #6ee7b7;
+            background: #ecfdf5;
+        }
+
+        .ui-divider {
+            height: 1px;
+            background-color: var(--border-color);
+            margin: 0.5rem 0;
+        }
+
+        .ui-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--muted-text);
+            font-size: 0.75rem;
+        }
+
+        .stat-value {
+            color: var(--primary-text);
+            font-size: 1rem;
+        }
+
+        .ui-timeline {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 0.5rem 1rem;
+            font-size: 0.75rem;
+            color: var(--muted-text);
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="content-block">
+        <h1 class="main-title">模型详情界面升级：集成材质编辑入口</h1>
+
+        <div class="section-title">核心结论</div>
+        <p class="conclusion-text">
+            已在模型详情面板的顶部操作区，紧邻「查看模型」右侧新增了高亮视觉的「材质编辑」按钮。此举补全了 3D 资产从预览、下载到在线后处理的工作流闭环，提高了模型管理的连贯性与效率。
+        </p>
+
+        <div class="section-title">行动建议 / 下一步</div>
+        <ul class="action-list">
+            <li><strong>前端开发实施：</strong> 提取下方演示 UI 中的 <code>.btn-blue</code> 按钮结构，整合至现有资产详情页的组件树中。</li>
+            <li><strong>路由与状态绑定：</strong> 为「材质编辑」按钮配置 <code>onClick</code> 事件，使其能够正确传递当前模型的 ID 并挂载 WebGL 材质编辑器实例。</li>
+            <li><strong>权限控制校验：</strong> 增加状态判断，确保该按钮仅对资产所有者或拥有「模型编辑」权限的用户渲染。</li>
+        </ul>
+    </div>
+
+    <!-- UI 演示区域 -->
+    <div class="ui-demo-wrapper">
+        <div class="ui-header">
+            <span>枪机2</span>
+            <span class="close-btn">✕</span>
+        </div>
+        <div class="ui-body">
+            <div class="ui-preview"></div>
+            <div class="ui-details">
+                <!-- 核心改动：新增材质编辑按钮 -->
+                <div class="ui-actions">
+                    <button class="btn btn-orange">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                        立即下载
+                    </button>
+                    <button class="btn btn-orange">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        查看模型
+                    </button>
+                    <!-- 新增按钮开始 -->
+                    <button class="btn btn-blue">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                        材质编辑
+                    </button>
+                    <!-- 新增按钮结束 -->
+                </div>
+
+                <div class="ui-metadata-row">
+                    <span class="ui-label">关键字:</span>
+                    <span class="ui-tag tag-blue">孪生体</span>
+                </div>
+                
+                <div class="ui-metadata-row">
+                    <span class="ui-label">文件格式:</span>
+                    <span class="ui-tag tag-green">glb</span>
+                </div>
+
+                <div class="ui-divider"></div>
+
+                <div class="ui-stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-label">文件大小</span>
+                        <span class="stat-value">0.80MB</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">文件格式</span>
+                        <span class="stat-value">glb</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">上传者</span>
+                        <span class="stat-value">-</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">修改者</span>
+                        <span class="stat-value">admin</span>
+                    </div>
+                </div>
+
+                <div class="ui-timeline">
+                    <span>上传时间</span>
+                    <span>2026-03-16 19:44</span>
+                    <span>修改时间</span>
+                    <span>2026-03-16 19:44</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

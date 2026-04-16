@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>轨交资产库 - 设备编辑原型</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #f3f4f6; padding: 24px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
+
+  .container { max-width: 1200px; margin: 0 auto; }
+
+  /* 文档说明区 */
+  .doc-section { background: #fff; padding: 24px; margin-bottom: 24px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .doc-title { font-size: 20px; font-weight: 600; color: #111827; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #3b82f6; display: inline-block; }
+  .doc-conclusion { font-size: 14px; color: #4b5563; background: #f0f9ff; padding: 14px 18px; border-radius: 6px; border-left: 4px solid #3b82f6; line-height: 1.7; margin-bottom: 12px; }
+  .doc-action { font-size: 13px; color: #059669; font-weight: 500; }
+  .doc-action strong { color: #111827; }
+
+  /* 页面容器 */
+  .page-wrapper { display: none; }
+  .page-wrapper.active { display: block; }
+
+  .page-container { background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px; overflow: hidden; }
+  .page-header { background: #18191c; color: #fff; padding: 12px 20px; font-size: 14px; font-weight: 500; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #f06941; }
+  .step-num { background: #f06941; color: #fff; padding: 2px 10px; border-radius: 3px; font-size: 12px; margin-right: 10px; }
+  .page-label { background: #10b981; color: #fff; padding: 2px 10px; border-radius: 3px; font-size: 11px; }
+
+  /* ========== 资产库样式 ========== */
+  .asset-page { display: flex; flex-direction: column; height: 580px; }
+  .top-nav { height: 50px; background: #18191c; display: flex; justify-content: space-between; align-items: center; padding: 0 24px; flex-shrink: 0; }
+  .logo { font-size: 16px; font-weight: bold; color: #fff; }
+  .logo span { color: #f06941; }
+  .user-info { font-size: 13px; color: #e5e7eb; display: flex; align-items: center; gap: 8px; }
+  .avatar { width: 24px; height: 24px; background: #4b5563; border-radius: 50%; }
+  .main-layout { display: flex; flex: 1; overflow: hidden; }
+  .sidebar { width: 220px; background: #fff; border-right: 1px solid #e5e7eb; flex-shrink: 0; }
+  .menu-item { padding: 12px 16px; font-size: 13px; color: #374151; cursor: pointer; font-weight: 500; }
+  .menu-item:hover { background: #f9fafb; }
+  .menu-item.active { background: #fff4f0; color: #f06941; border-left: 3px solid #f06941; padding-left: 13px; }
+  .content-area { flex: 1; padding: 20px; background: #f0f2f5; overflow-y: auto; }
+  .page-title { font-size: 18px; color: #111827; margin-bottom: 16px; }
+  .filter-bar { background: #fff; padding: 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 16px; }
+  .filter-label { font-size: 13px; color: #4b5563; font-weight: 500; }
+  .filter-tags { display: flex; gap: 12px; flex-wrap: wrap; }
+  .tag { font-size: 13px; color: #4b5563; padding: 4px 12px; background: #f3f4f6; border-radius: 4px; cursor: pointer; }
+  .tag.active { background: #f06941; color: #fff; }
+  .filter-controls { display: flex; justify-content: space-between; margin-bottom: 16px; }
+  .control-left { display: flex; gap: 10px; }
+  .control-right { display: flex; gap: 10px; }
+  .btn-sm { padding: 6px 12px; font-size: 12px; color: #4b5563; background: #fff; border: 1px solid #d1d5db; border-radius: 3px; cursor: pointer; }
+  .btn-sm:hover { color: #f06941; border-color: #f06941; }
+  .model-grid { display: flex; gap: 16px; flex-wrap: wrap; }
+  .model-card { width: 200px; height: 180px; background: radial-gradient(circle at 50% 40%, #fff 0%, #d1d5db 100%); border-radius: 4px; position: relative; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.1); transition: transform 0.2s, box-shadow 0.2s; }
+  .model-card:hover { transform: translateY(-4px); box-shadow: 0 8px 16px rgba(0,0,0,0.15); }
+  .card-icon { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); font-size: 36px; }
+  .card-name { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.7), transparent); color: #fff; padding: 10px 12px; font-size: 13px; }
+
+  /* ========== 详情页样式 ========== */
+  .detail-page { display: flex; flex-direction: column; height: 580px; background: #f0f2f5; }
+  .detail-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; background: #fff; border-bottom: 1px solid #e5e7eb; flex-shrink: 0; }
+  .detail-title { font-size: 16px; font-weight: 500; color: #111827; }
+  .close-btn { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; color: #9ca3af; cursor: pointer; border-radius: 4px; font-size: 18px; }
+  .close-btn:hover { background: #f3f4f6; }
+  .detail-body { flex: 1; display: flex; padding: 24px; gap: 32px; overflow-y: auto; }
+  .preview-box { width: 380px; height: 380px; background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; background-image: url('https://minimax-algeng-chat-tts.oss-cn-wulanchabu.aliyuncs.com/ccv2%2F2026-04-14%2FMiniMax-M2.5%2F2031966486800633944%2F35264e1ede6d16477219e46ab65ad2cf5f99764b04c85182c797f5be36f853f3..png?Expires=1776222126&OSSAccessKeyId=LTAI5tGLnRTkBjLuYPjNcKQ8&Signature=dXtY1PCvRTWvI4Ydf392%2F6%2B9FKk%3D'); background-size: cover; background-position: center; }
+  .detail-info { flex: 1; display: flex; flex-direction: column; gap: 14px; }
+  .btn-group { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn { padding: 10px 18px; border-radius: 6px; font-size: 14px; font-weight: 500; cursor: pointer; border: none; display: flex; align-items: center; gap: 8px; transition: all 0.2s; }
+  .btn-orange { background: #f06941; color: #fff; }
+  .btn-orange:hover { background: #e05a33; }
+  .btn-blue { background: #3b82f6; color: #fff; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
+  .btn-blue:hover { background: #2563eb; }
+  .meta-row { display: flex; align-items: center; gap: 12px; font-size: 13px; }
+  .meta-label { color: #9ca3af; }
+  .meta-tag { padding: 3px 10px; border-radius: 3px; font-size: 12px; }
+  .tag-blue { color: #3b82f6; background: #eff6ff; border: 1px solid #93c5fd; }
+  .tag-green { color: #10b981; background: #ecfdf5; border: 1px solid #6ee7b7; }
+  .divider { height: 1px; background: #e5e7eb; }
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .stat-item { display: flex; flex-direction: column; gap: 4px; }
+  .stat-label { font-size: 12px; color: #9ca3af; }
+  .stat-value { font-size: 14px; color: #111827; }
+  .timeline { display: grid; grid-template-columns: auto 1fr; gap: 8px 16px; font-size: 12px; color: #9ca3af; margin-top: auto; }
+
+  /* ========== 材质编辑页样式 ========== */
+  .material-page { display: flex; height: 580px; background: #181a1f; }
+  .tree-panel { width: 260px; background: #181a1f; border-right: 1px solid #000; display: flex; flex-direction: column; flex-shrink: 0; }
+  .panel-title { padding: 12px 16px; background: #1e2227; color: #e5e7eb; font-size: 13px; font-weight: bold; border-bottom: 1px solid #000; flex-shrink: 0; }
+  .tree-content { flex: 1; overflow-y: auto; padding: 8px 0; }
+  .tree-node { display: flex; align-items: center; padding: 8px 12px; color: #d1d5db; font-size: 12px; cursor: pointer; }
+  .tree-node:hover { background: #2c313a; }
+  .tree-node.selected { background: #2563eb; color: #fff; }
+  .tree-toggle { width: 16px; margin-right: 6px; color: #9ca3af; font-size: 10px; }
+  .tree-icon { margin-right: 8px; font-size: 14px; }
+  .center-area { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+  .preview-area { flex: 1; background: #1a1c23; display: flex; align-items: center; justify-content: center; position: relative; min-height: 280px; background-image: url('https://minimax-algeng-chat-tts.oss-cn-wulanchabu.aliyuncs.com/ccv2%2F2026-04-14%2FMiniMax-M2.5%2F2031966486800633944%2F35264e1ede6d16477219e46ab65ad2cf5f99764b04c85182c797f5be36f853f3..png?Expires=1776222126&OSSAccessKeyId=LTAI5tGLnRTkBjLuYPjNcKQ8&Signature=dXtY1PCvRTWvI4Ydf392%2F6%2B9FKk%3D'); background-size: cover; background-position: center; }
+  .grid-bg { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: linear-gradient(#2c313a 1px, transparent 1px), linear-gradient(90deg, #2c313a 1px, transparent 1px); background-size: 40px 40px; opacity: 0.3; pointer-events: none; }
+  .material-bar { height: 160px; background: #181a1f; border-top: 1px solid #000; display: flex; flex-direction: column; flex-shrink: 0; }
+  .material-title { padding: 12px 16px 8px; color: #e5e7eb; font-size: 13px; font-weight: bold; }
+  .material-list { flex: 1; display: flex; gap: 20px; padding: 0 16px 16px; overflow-x: auto; align-items: center; }
+  .material-item { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+  .material-ball { width: 60px; height: 60px; border-radius: 50%; margin-bottom: 8px; box-shadow: inset -6px -6px 12px rgba(0,0,0,0.6), 0 4px 6px rgba(0,0,0,0.4); position: relative; overflow: hidden; }
+  .material-ball::after { content: ''; position: absolute; bottom: -10px; left: 0; right: 0; height: 24px; background: linear-gradient(to top, rgba(255,255,255,0.2), transparent); }
+  .mat-1 { background: radial-gradient(circle at 35% 35%, #d1d5db, #6b7280); }
+  .mat-2 { background: radial-gradient(circle at 40% 30%, #9ca3af, #4b5563); }
+  .mat-3 { background: radial-gradient(circle at 35% 35%, #991b1b, #450a0a); }
+  .mat-4 { background: radial-gradient(circle at 25% 35%, #1d4ed8, #020617); border: 1px solid #3b82f6; }
+  .mat-5 { background: radial-gradient(circle at 35% 35%, #a16207, #422006); }
+  .mat-label { font-size: 11px; color: #e5e7eb; white-space: nowrap; }
+  .prop-panel { width: 340px; background: #181a1f; border-left: 1px solid #000; display: flex; flex-direction: column; flex-shrink: 0; }
+  .prop-title { padding: 12px 16px; background: #1e2227; color: #e5e7eb; font-size: 13px; font-weight: bold; border-bottom: 1px solid #000; }
+  .prop-content { flex: 1; overflow-y: auto; padding: 16px; }
+  .prop-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+  .prop-current { font-size: 12px; color: #fff; line-height: 1.5; flex: 1; margin-right: 10px; }
+  .btn-export { background: transparent; border: 1px solid #4b5563; color: #d1d5db; padding: 4px 10px; font-size: 12px; border-radius: 4px; cursor: pointer; }
+  .form-row { display: flex; align-items: center; margin-bottom: 12px; }
+  .form-label { width: 70px; text-align: right; margin-right: 12px; font-size: 12px; color: #d1d5db; }
+  .form-field { flex: 1; }
+  .select-field { width: 100%; background: #181a1f; border: 1px solid #4b5563; color: #e5e7eb; padding: 6px 10px; font-size: 12px; border-radius: 4px; }
+  .color-field { width: 100%; height: 26px; background: #181a1f; border: 1px solid #4b5563; border-radius: 4px; }
+  .range-field { display: flex; align-items: center; gap: 8px; }
+  .range-input { flex: 1; -webkit-appearance: none; height: 4px; border-radius: 2px; }
+  .range-input::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; background: #fff; border-radius: 50%; cursor: pointer; }
+  .range-val { font-size: 12px; color: #e5e7eb; width: 32px; text-align: right; }
+  .prop-divider { display: flex; align-items: center; margin: 16px 0 12px; }
+  .prop-divider::before, .prop-divider::after { content: ''; flex: 1; border-bottom: 1px solid #374151; }
+  .prop-divider span { padding: 0 10px; font-size: 12px; color: #e5e7eb; font-weight: bold; }
+  .texture-btn { background: #3b82f6; color: #fff; border: none; padding: 6px 14px; font-size: 12px; border-radius: 3px; cursor: pointer; }
+
+  /* 交互说明 */
+  .interaction-note { background: #fff; padding: 24px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); margin-top: 20px; }
+  .note-title { font-size: 16px; font-weight: 600; color: #111827; margin-bottom: 16px; }
+  .note-list { list-style: none; }
+  .note-list li { padding: 12px 0; border-bottom: 1px solid #f3f4f6; display: flex; align-items: center; gap: 12px; }
+  .note-list li:last-child { border-bottom: none; }
+  .step-num2 { width: 28px; height: 28px; background: #f06941; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: bold; flex-shrink: 0; }
+  .note-text { font-size: 14px; color: #4b5563; }
+  .highlight { color: #f06941; font-weight: 500; }
+  .highlight-blue { color: #3b82f6; font-weight: 500; }
+
+  /* 提示 */
+  .tip { text-align: center; padding: 20px; color: #666; font-size: 14px; background: #fff; border-radius: 8px; margin-bottom: 20px; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="tip">💡 点击下方页面卡片可体验完整交互流程</div>
+
+  <!-- 步骤1：资产库 -->
+  <div class="page-wrapper active" id="page1">
+    <div class="page-container">
+      <div class="page-header">
+        <div><span class="step-num">步骤1</span>资产库 - 点击设备卡片</div>
+      </div>
+      <div class="asset-page">
+        <div class="top-nav">
+          <div class="logo"><span>PCI</span>佳都 轨交资产库</div>
+          <div class="user-info"><div class="avatar"></div>admin ▼</div>
+        </div>
+        <div class="main-layout">
+          <div class="sidebar">
+            <div class="menu-item active">设备模型</div>
+            <div class="menu-item">材质管理</div>
+            <div class="menu-item">车站资产</div>
+            <div class="menu-item">系统管理</div>
+          </div>
+          <div class="content-area">
+            <div class="page-title">设备模型</div>
+            <div class="filter-bar">
+              <span class="filter-label">二级：</span>
+              <div class="filter-tags">
+                <span class="tag active">全部</span>
+                <span class="tag">无线系统</span>
+                <span class="tag">传输系统</span>
+                <span class="tag">电视监控系统</span>
+              </div>
+            </div>
+            <div class="filter-controls">
+              <div class="control-left">
+                <select class="btn-sm"><option>文件格式</option></select>
+                <button class="btn-sm">重置</button>
+              </div>
+              <div class="control-right">
+                <button class="btn-sm">+ 添加</button>
+              </div>
+            </div>
+            <div class="model-grid">
+              <div class="model-card" onclick="goToPage(2)">
+                <div class="card-icon">📷</div>
+                <div class="card-name">枪机2</div>
+              </div>
+              <div class="model-card" onclick="goToPage(2)">
+                <div class="card-icon">📷</div>
+                <div class="card-name">球机</div>
+              </div>
+              <div class="model-card" onclick="goToPage(2)">
+                <div class="card-icon">📷</div>
+                <div class="card-name">枪机</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 步骤2：详情页 -->
+  <div class="page-wrapper" id="page2">
+    <div class="page-container">
+      <div class="page-header">
+        <div><span class="step-num">步骤2</span>设备详情页 - 点击材质编辑按钮</div>
+        <span class="page-label" style="cursor:pointer; background:#6b7280;" onclick="goToPage(1)">← 返回资产库</span>
+      </div>
+      <div class="detail-page">
+        <div class="detail-header">
+          <div class="detail-title">枪机2</div>
+          <div class="close-btn" onclick="goToPage(1)">✕</div>
+        </div>
+        <div class="detail-body">
+          <div class="preview-box"></div>
+          <div class="detail-info">
+            <div class="btn-group">
+              <button class="btn btn-orange">📥 立即下载</button>
+              <button class="btn btn-orange">👁 查看模型</button>
+              <button class="btn btn-blue" onclick="goToPage(3)">✏️ 材质编辑</button>
+            </div>
+            <div class="meta-row">
+              <span class="meta-label">关键字：</span>
+              <span class="meta-tag tag-blue">孪生体</span>
+            </div>
+            <div class="meta-row">
+              <span class="meta-label">文件格式：</span>
+              <span class="meta-tag tag-green">glb</span>
+            </div>
+            <div class="divider"></div>
+            <div class="stats-grid">
+              <div class="stat-item"><span class="stat-label">文件大小</span><span class="stat-value">0.80MB</span></div>
+              <div class="stat-item"><span class="stat-label">文件格式</span><span class="stat-value">glb</span></div>
+              <div class="stat-item"><span class="stat-label">上传者</span><span class="stat-value">-</span></div>
+              <div class="stat-item"><span class="stat-label">修改者</span><span class="stat-value">admin</span></div>
+            </div>
+            <div class="timeline">
+              <span>上传时间</span><span>2026-03-16 19:44</span>
+              <span>修改时间</span><span>2026-03-16 19:44</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 步骤3：材质编辑页 -->
+  <div class="page-wrapper" id="page3">
+    <div class="page-container">
+      <div class="page-header">
+        <div><span class="step-num">步骤3</span>材质编辑页面 - 目标页面</div>
+        <span class="page-label" style="cursor:pointer; background:#6b7280;" onclick="goToPage(2)">← 返回详情页</span>
+      </div>
+      <div class="material-page">
+        <div class="tree-panel">
+          <div class="panel-title">大纲视图 (Scene Graph)</div>
+          <div class="tree-content">
+            <div class="tree-node"><span class="tree-toggle">▼</span><span class="tree-icon">📦</span>出站检票机 (E3A)</div>
+            <div class="tree-node" style="padding-left: 28px;"><span class="tree-toggle">▼</span><span class="tree-icon">📁</span>机箱 (整机外壳)</div>
+            <div class="tree-node selected" style="padding-left: 44px;"><span class="tree-toggle"></span><span class="tree-icon">🧊</span>外壳-塑料</div>
+            <div class="tree-node" style="padding-left: 44px;"><span class="tree-toggle"></span><span class="tree-icon">🧊</span>不锈钢边框</div>
+            <div class="tree-node" style="padding-left: 28px;"><span class="tree-toggle">▶</span><span class="tree-icon">📁</span>闸门模块</div>
+            <div class="tree-node"><span class="tree-toggle">▶</span><span class="tree-icon">💡</span>场景灯光组</div>
+          </div>
+        </div>
+        <div class="center-area">
+          <div class="preview-area"><div class="grid-bg"></div></div>
+          <div class="material-bar">
+            <div class="material-title">材质库 (Material Library)</div>
+            <div class="material-list">
+              <div class="material-item"><div class="material-ball mat-1"></div><div class="mat-label">公共区装修_地板</div></div>
+              <div class="material-item"><div class="material-ball mat-2"></div><div class="mat-label">公共区装修_墙壁</div></div>
+              <div class="material-item"><div class="material-ball mat-3"></div><div class="mat-label">公共区装修_红色</div></div>
+              <div class="material-item"><div class="material-ball mat-4"></div><div class="mat-label">公共区装修_灯箱</div></div>
+              <div class="material-item"><div class="material-ball mat-5"></div><div class="mat-label">公共区装修_盲道</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="prop-panel">
+          <div class="prop-title">材质属性与功能配置</div>
+          <div class="prop-content">
+            <div class="prop-header"><div class="prop-current">当前选中：出站检票机 (E3A) - 机箱 - 外壳-塑料</div><button class="btn-export">导出</button></div>
+            <div class="form-row"><div class="form-label">类型</div><div class="form-field"><select class="select-field"><option>物理(Physical)</option></select></div></div>
+            <div class="form-row"><div class="form-label">可见面</div><div class="form-field"><select class="select-field"><option>双面(DoubleSide)</option></select></div></div>
+            <div class="form-row"><div class="form-label">是否透明</div><div class="form-field"><span style="color:#ccc;font-size:12px;">否</span><div style="position:relative;width:32px;height:16px;background:#4b5563;border-radius:10px;margin:0 8px;cursor:pointer;"><div style="position:absolute;left:2px;top:2px;width:12px;height:12px;background:#fff;border-radius:50%;"></div></div><span style="color:#3b82f6;font-size:12px;">是</span></div></div>
+            <div class="form-row"><div class="form-label">不透明度</div><div class="form-field"><div class="range-field"><input type="range" class="range-input" style="background:linear-gradient(to right,#3b82f6 100%,#374151 100%);"><span class="range-val">1.00</span></div></div></div>
+            <div class="form-row"><div class="form-label">颜色</div><div class="form-field"><div class="color-field"></div></div></div>
+            <div class="form-row"><div class="form-label">粗糙度</div><div class="form-field"><div class="range-field"><input type="range" class="range-input" style="background:linear-gradient(to right,#3b82f6 86%,#374151 86%);"><span class="range-val">0.86</span></div></div></div>
+            <div class="form-row"><div class="form-label">金属度</div><div class="form-field"><div class="range-field"><input type="range" class="range-input" style="background:linear-gradient(to right,#3b82f6 0%,#374151 0%);"><span class="range-val">0.00</span></div></div></div>
+            <div class="form-row"><div class="form-label">清漆</div><div class="form-field"><div class="range-field"><input type="range" class="range-input" style="background:linear-gradient(to right,#3b82f6 0%,#374151 0%);"><span class="range-val">0.00</span></div></div></div>
+            <div class="form-row"><div class="form-label">清漆粗糙度</div><div class="form-field"><div class="range-field"><input type="range" class="range-input" style="background:linear-gradient(to right,#3b82f6 0%,#374151 0%);"><span class="range-val">0.00</span></div></div></div>
+            <div class="form-row"><div class="form-label">自发光</div><div class="form-field"><div class="color-field"></div></div></div>
+            <div class="prop-divider"><span>材质贴图</span></div>
+            <div class="form-row"><div class="form-label">颜色贴图</div><div class="form-field"><button class="texture-btn">选择</button></div></div>
+            <div class="form-row"><div class="form-label">法线贴图</div><div class="form-field"><button class="texture-btn">选择</button></div></div>
+            <div class="form-row"><div class="form-label">粗糙贴图</div><div class="form-field"><button class="texture-btn">选择</button></div></div>
+            <div class="form-row"><div class="form-label">金属贴图</div><div class="form-field"><button class="texture-btn">选择</button></div></div>
+            <div class="form-row"><div class="form-label">自发光贴图</div><div class="form-field"><button class="texture-btn">选择</button></div></div>
+            <div class="form-row"><div class="form-label">透明贴图</div><div class="form-field"><button class="texture-btn">选择</button></div></div>
+            <div class="form-row"><div class="form-label">环境贴图</div><div class="form-field"><button class="texture-btn">选择</button></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 交互说明 -->
+  <div class="interaction-note">
+    <div class="note-title">交互流程说明</div>
+    <ul class="note-list">
+      <li><span class="step-num2">1</span><span class="note-text">点击资产库中的<strong class="highlight">设备卡片</strong></span></li>
+      <li><span class="step-num2">2</span><span class="note-text">打开<strong class="highlight">设备详情页</strong></span></li>
+      <li><span class="step-num2">3</span><span class="note-text">点击详情页中的<strong class="highlight-blue">「材质编辑」</strong>按钮</span></li>
+      <li><span class="step-num2">4</span><span class="note-text">进入<strong class="highlight">材质编辑页面</strong></span></li>
+    </ul>
+  </div>
+</div>
+
+<script>
+function goToPage(pageNum) {
+  document.querySelectorAll('.page-wrapper').forEach(p => p.classList.remove('active'));
+  document.getElementById('page' + pageNum).classList.add('active');
+}
+</script>
+
+</body>
+</html>

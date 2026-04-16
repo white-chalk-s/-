@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>设备节点材质编辑原型</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <aside class="left">
+      <div class="left-header">PCI设备编辑器 - 出站检票机 CE3A</div>
+      <div class="tree-wrap">
+        <div class="tree-node" data-folder>
+          <div class="tree-row folder tree-root">
+            <span class="caret">▶</span>
+            <span class="icon root"></span>
+            <span>出站检票机CE3A</span>
+          </div>
+          <div class="tree-children">
+            <div class="tree-node" data-folder>
+              <div class="tree-row folder indent-1">
+                <span class="caret">▶</span>
+                <span class="icon obj"></span>
+                <span>Object002</span>
+              </div>
+              <div class="tree-children">
+                <div class="tree-row mesh indent-2" data-face="front" data-node-title="出站检票机-外壳" data-path="Object002 / Mesh">
+                  <span class="caret empty">▶</span>
+                  <span class="icon mesh"></span>
+                  <span>Mesh</span>
+                  <div class="tree-btns">
+                    <button class="tree-btn visibility" title="显隐">👁</button>
+                    <button class="tree-btn focus" title="聚焦">◎</button>
+                  </div>
+                </div>
+                <div class="tree-row mesh indent-2" data-face="top" data-node-title="顶部饰板" data-path="Object002 / Mesh_1">
+                  <span class="caret empty">▶</span>
+                  <span class="icon mesh"></span>
+                  <span>Mesh_1</span>
+                  <div class="tree-btns">
+                    <button class="tree-btn visibility" title="显隐">👁</button>
+                    <button class="tree-btn focus" title="聚焦">◎</button>
+                  </div>
+                </div>
+                <div class="tree-row mesh indent-2" data-face="left" data-node-title="左侧面板" data-path="Object002 / Mesh_2">
+                  <span class="caret empty">▶</span>
+                  <span class="icon mesh"></span>
+                  <span>Mesh_2</span>
+                  <div class="tree-btns">
+                    <button class="tree-btn visibility" title="显隐">👁</button>
+                    <button class="tree-btn focus" title="聚焦">◎</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="tree-node" data-folder>
+              <div class="tree-row folder indent-1">
+                <span class="caret">▶</span>
+                <span class="icon obj"></span>
+                <span>Object003</span>
+              </div>
+              <div class="tree-children">
+                <div class="tree-row mesh indent-2" data-face="back" data-node-title="背部外壳" data-path="Object003 / Mesh">
+                  <span class="caret empty">▶</span>
+                  <span class="icon mesh"></span>
+                  <span>Mesh</span>
+                  <div class="tree-btns">
+                    <button class="tree-btn visibility" title="显隐">👁</button>
+                    <button class="tree-btn focus" title="聚焦">◎</button>
+                  </div>
+                </div>
+                <div class="tree-row mesh indent-2" data-face="bottom" data-node-title="底部结构" data-path="Object003 / Mesh_1">
+                  <span class="caret empty">▶</span>
+                  <span class="icon mesh"></span>
+                  <span>Mesh_1</span>
+                  <div class="tree-btns">
+                    <button class="tree-btn visibility" title="显隐">👁</button>
+                    <button class="tree-btn focus" title="聚焦">◎</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="tree-node" data-folder>
+              <div class="tree-row folder indent-1">
+                <span class="caret">▶</span>
+                <span class="icon obj"></span>
+                <span>Object004</span>
+              </div>
+              <div class="tree-children">
+                <div class="tree-row mesh indent-2" data-face="right" data-node-title="右侧面板" data-path="Object004 / Mesh">
+                  <span class="caret empty">▶</span>
+                  <span class="icon mesh"></span>
+                  <span>Mesh</span>
+                  <div class="tree-btns">
+                    <button class="tree-btn visibility" title="显隐">👁</button>
+                    <button class="tree-btn focus" title="聚焦">◎</button>
+                  </div>
+                </div>
+                <div class="tree-row mesh indent-2" data-face="front" data-node-title="前部细节件" data-path="Object004 / Mesh_1">
+                  <span class="caret empty">▶</span>
+                  <span class="icon mesh"></span>
+                  <span>Mesh_1</span>
+                  <div class="tree-btns">
+                    <button class="tree-btn visibility" title="显隐">👁</button>
+                    <button class="tree-btn focus" title="聚焦">◎</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="tree-node" data-folder>
+              <div class="tree-row folder indent-1">
+                <span class="caret">▶</span>
+                <span class="icon obj"></span>
+                <span>Object005</span>
+              </div>
+              <div class="tree-children">
+                <div class="tree-row mesh indent-2" data-face="front" data-node-title="功能面板" data-path="Object005 / Mesh">
+                  <span class="caret empty">▶</span>
+                  <span class="icon mesh"></span>
+                  <span>Mesh</span>
+                  <div class="tree-btns">
+                    <button class="tree-btn visibility" title="显隐">👁</button>
+                    <button class="tree-btn focus" title="聚焦">◎</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="topbar">
+      <div class="top-center">
+        <button class="btn" id="saveBtn" type="button">保存</button>
+        <button class="btn" id="importBtn" type="button">导入</button>
+        <button class="btn primary" id="exportBtn" type="button">导出</button>
+        <button class="btn ghost" id="resetBtn" type="button">重置</button>
+      </div>
+    </div>
+
+    <main class="center">
+      <section class="scene">
+        <div class="face" data-face="front">
+          <div class="face-tag">正面 (Front)</div>
+          <div class="face-center">
+            <div class="mat-card">
+              <div class="ball" id="ball-front"></div>
+              <div class="mat-name" id="name-front"></div>
+              <div class="mat-path" id="path-front"></div>
+            </div>
+          </div>
+          <div class="face-corner">正面</div>
+        </div>
+
+        <div class="face" data-face="top">
+          <div class="face-tag">顶部 (Top)</div>
+          <div class="face-center">
+            <div class="mat-card">
+              <div class="ball" id="ball-top"></div>
+              <div class="mat-name" id="name-top"></div>
+              <div class="mat-path" id="path-top"></div>
+            </div>
+          </div>
+          <div class="face-corner">顶部</div>
+        </div>
+
+        <div class="face" data-face="left">
+          <div class="face-tag">左侧 (Left)</div>
+          <div class="face-center">
+            <div class="mat-card">
+              <div class="ball" id="ball-left"></div>
+              <div class="mat-name" id="name-left"></div>
+              <div class="mat-path" id="path-left"></div>
+            </div>
+          </div>
+          <div class="face-corner">左侧</div>
+        </div>
+
+        <div class="face" data-face="back">
+          <div class="face-tag">背面 (Back)</div>
+          <div class="face-center">
+            <div class="mat-card">
+              <div class="ball" id="ball-back"></div>
+              <div class="mat-name" id="name-back"></div>
+              <div class="mat-path" id="path-back"></div>
+            </div>
+          </div>
+          <div class="face-corner">背面</div>
+        </div>
+
+        <div class="face" data-face="bottom">
+          <div class="face-tag">底部 (Bottom)</div>
+          <div class="face-center">
+            <div class="mat-card">
+              <div class="ball" id="ball-bottom"></div>
+              <div class="mat-name" id="name-bottom"></div>
+              <div class="mat-path" id="path-bottom"></div>
+            </div>
+          </div>
+          <div class="face-corner">底部</div>
+        </div>
+
+        <div class="face" data-face="right">
+          <div class="face-tag">右侧 (Right)</div>
+          <div class="face-center">
+            <div class="mat-card">
+              <div class="ball" id="ball-right"></div>
+              <div class="mat-name" id="name-right"></div>
+              <div class="mat-path" id="path-right"></div>
+            </div>
+          </div>
+          <div class="face-corner">右侧</div>
+        </div>
+      </section>
+    </main>
+
+    <aside class="right">
+      <div class="right-header">材质属性与功能配置</div>
+      <div class="right-body">
+        <div class="empty" id="emptyState">
+          请先在左侧选择具体 Mesh 节点<br>
+          或直接点击中间设备面<br>
+          右侧会显示当前材质与编辑操作
+        </div>
+
+        <div class="prop-panel" id="propPanel">
+          <div class="card">
+            <div class="material-box">
+              <div class="ball" id="selectedBall"></div>
+              <div>
+                <div class="material-desc-face" id="selectedFaceTag"></div>
+                <div class="material-desc-title" id="selectedMaterialName">出站检票机-外壳</div>
+                <div class="material-desc-path" id="selectedNodeName"></div>
+                <div class="material-desc-info" id="selectedNodePath"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">材质属性</div>
+            <div class="form">
+              <div class="label">轴向</div>
+              <select class="select" id="axisSelect">
+                <option>UV</option>
+                <option>XY</option>
+                <option>XZ</option>
+                <option>YZ</option>
+              </select>
+
+              <div class="label" style="grid-column:1/-1;color:#fff;font-weight:700;margin-top:8px;">透明度</div>
+
+              <div class="label">内侧透明度</div>
+              <div class="inline">
+                <input type="range" id="innerOpacity" min="0" max="1" step="0.01" value="1.00">
+                <div class="value" id="innerOpacityVal">1.00</div>
+              </div>
+
+              <div class="label">外侧透明度</div>
+              <div class="inline">
+                <input type="range" id="outerOpacity" min="0" max="1" step="0.01" value="1.00">
+                <div class="value" id="outerOpacityVal">1.00</div>
+              </div>
+
+              <div class="label">单面透明</div>
+              <select class="select" id="singleSideTrans">
+                <option>否</option>
+                <option>是</option>
+              </select>
+
+              <div class="label" style="grid-column:1/-1;color:#fff;font-weight:700;margin-top:8px;">基础属性</div>
+
+              <div class="label">颜色</div>
+              <div class="color-wrap">
+                <input type="color" id="colorPicker" value="#bfc1bc">
+                <input class="input" id="colorText" value="#BFC1BC">
+              </div>
+
+              <div class="label">粗糙度</div>
+              <div class="inline">
+                <input type="range" id="roughnessRange" min="0" max="1" step="0.01" value="0.86">
+                <div class="value" id="roughnessValue">0.86</div>
+              </div>
+
+              <div class="label">金属度</div>
+              <div class="inline">
+                <input type="range" id="metalnessRange" min="0" max="1" step="0.01" value="0.00">
+                <div class="value" id="metalnessValue">0.00</div>
+              </div>
+
+              <div class="label">清漆</div>
+              <div class="inline">
+                <input type="range" id="clearcoatRange" min="0" max="1" step="0.01" value="0.00">
+                <div class="value" id="clearcoatValue">0.00</div>
+              </div>
+
+              <div class="label">清漆粗糙度</div>
+              <div class="inline">
+                <input type="range" id="clearcoatRoughRange" min="0" max="1" step="0.01" value="0.00">
+                <div class="value" id="clearcoatRoughValue">0.00</div>
+              </div>
+
+              <div class="label">自发光</div>
+              <div class="inline">
+                <input type="range" id="emissiveRange" min="0" max="1" step="0.01" value="0.00">
+                <div class="value" id="emissiveValue">0.00</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">材质贴图</div>
+            <div class="form">
+              <div class="label">颜色贴图</div>
+              <div class="map-preview-wrap">
+                <div class="map-preview" id="preview-colorMap" data-map="colorMap">
+                  <span class="map-placeholder">无</span>
+                </div>
+              </div>
+
+              <div class="label">法线贴图</div>
+              <div class="map-preview-wrap">
+                <div class="map-preview" id="preview-normalMap" data-map="normalMap">
+                  <span class="map-placeholder">无</span>
+                </div>
+              </div>
+
+              <div class="label">粗糙贴图</div>
+              <div class="map-preview-wrap">
+                <div class="map-preview" id="preview-roughMap" data-map="roughMap">
+                  <span class="map-placeholder">无</span>
+                </div>
+              </div>
+
+              <div class="label">金属贴图</div>
+              <div class="map-preview-wrap">
+                <div class="map-preview" id="preview-metalMap" data-map="metalMap">
+                  <span class="map-placeholder">无</span>
+                </div>
+              </div>
+
+              <div class="label">自发光贴图</div>
+              <div class="map-preview-wrap">
+                <div class="map-preview" id="preview-emissiveMap" data-map="emissiveMap">
+                  <span class="map-placeholder">无</span>
+                </div>
+              </div>
+
+              <div class="label">透明贴图</div>
+              <div class="map-preview-wrap">
+                <div class="map-preview" id="preview-opacityMap" data-map="opacityMap">
+                  <span class="map-placeholder">无</span>
+                </div>
+              </div>
+
+              <div class="label">环境贴图</div>
+              <div class="map-preview-wrap">
+                <div class="map-preview" id="preview-envMap" data-map="envMap">
+                  <span class="map-placeholder">无</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tips" id="tipsText">操作建议：先选中具体 Mesh 节点，再拖拽材质到中间设备面。</div>
+        </div>
+      </div>
+    </aside>
+
+    <section class="bottom">
+      <div class="lib-tree">
+        <div class="lib-header">
+          <input type="text" class="lib-search" placeholder="搜索材质..." id="materialSearch">
+        </div>
+        <div class="lib-items">
+          <div class="lib-item active" data-folder="all"><span class="caret" style="transform:none;">▼</span><span class="icon obj"></span><span>所有材质</span></div>
+          <div class="lib-item" data-folder="folder1"><span class="caret" style="transform:none;">▼</span><span class="icon obj"></span><span>测试子目录</span></div>
+          <div class="lib-item" data-folder="folder2"><span class="caret" style="transform:none;">▼</span><span class="icon obj"></span><span>测试子目录2</span></div>
+        </div>
+      </div>
+      <div class="assets">
+        <div class="assets-grid">
+          <div class="asset" draggable="true" data-folder="folder1" data-name="装饰地面" data-color="#c9c9c5">
+            <div class="ball" style="background:#c9c9c5;"></div>
+            <div class="asset-name">装饰地面</div>
+          </div>
+          <div class="asset" draggable="true" data-folder="folder1" data-name="地砖" data-color="#d8d9d4">
+            <div class="ball" style="background:#d8d9d4;"></div>
+            <div class="asset-name">地砖</div>
+          </div>
+          <div class="asset" draggable="true" data-folder="folder1" data-name="世誉-玻璃" data-color="#1b1b1f">
+            <div class="ball" style="background:#1b1b1f;"></div>
+            <div class="asset-name">世誉-玻璃</div>
+          </div>
+          <div class="asset" draggable="true" data-folder="folder1" data-name="白色灯光" data-color="#ffffff">
+            <div class="ball" style="background:#ffffff;"></div>
+            <div class="asset-name">白色灯光</div>
+          </div>
+          <div class="asset" draggable="true" data-folder="folder2" data-name="消隐红色" data-color="#ef4545">
+            <div class="ball" style="background:#ef4545;"></div>
+            <div class="asset-name">消隐红色</div>
+          </div>
+          <div class="asset" draggable="true" data-folder="folder2" data-name="安全出口" data-color="#61d257">
+            <div class="ball" style="background:#61d257;"></div>
+            <div class="asset-name">安全出口</div>
+          </div>
+          <div class="asset" draggable="true" data-folder="folder2" data-name="警示黄" data-color="#f0d93a">
+            <div class="ball" style="background:#f0d93a;"></div>
+            <div class="asset-name">警示黄</div>
+          </div>
+          <div class="asset" draggable="true" data-folder="folder2" data-name="消隐蓝" data-color="#4f8fe9">
+            <div class="ball" style="background:#4f8fe9;"></div>
+            <div class="asset-name">消隐蓝</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- 贴图预览弹窗 -->
+  <div class="map-modal" id="mapModal">
+    <div class="map-modal-content">
+      <div class="map-modal-header">
+        <span class="map-modal-title" id="modalTitle">贴图预览</span>
+        <button class="map-modal-close" id="modalClose">×</button>
+      </div>
+      <div class="map-modal-body">
+        <img id="modalImg" src="" alt="贴图预览">
+      </div>
+      <div class="map-modal-footer">
+        <button class="map-modal-reset" id="modalReset">重置</button>
+        <label class="map-modal-select" for="fileInput">
+          <input type="file" id="fileInput" accept="image/*" style="display:none">
+          选择
+        </label>
+        <button class="map-modal-confirm" id="modalConfirm">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
