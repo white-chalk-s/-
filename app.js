@@ -408,7 +408,7 @@
     });
 
     // 编辑按钮
-    const editButtons = document.querySelectorAll(".tool-group:last-child .tool-btn-container .btn");
+    const editButtons = document.querySelectorAll(".tool-group:nth-child(2) .tool-btn-container .btn");
     editButtons.forEach(btn => {
       btn.addEventListener("click", function() {
         const text = btn.textContent;
@@ -462,6 +462,28 @@
             } else {
               alert("请先选择一个面");
             }
+            break;
+        }
+      });
+    });
+
+    // 视图按钮
+    const viewButtons = document.querySelectorAll(".tool-group:nth-child(3) .tool-btn-container .btn");
+    viewButtons.forEach(btn => {
+      btn.addEventListener("click", function() {
+        const text = btn.textContent;
+        switch(text) {
+          case "重置相机":
+            alert("重置相机");
+            break;
+          case "锁定相机":
+            alert("锁定相机");
+            break;
+          case "锁定Y轴":
+            alert("锁定Y轴");
+            break;
+          case "裁剪平面":
+            alert("裁剪平面");
             break;
         }
       });
