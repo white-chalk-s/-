@@ -377,9 +377,25 @@
           <input type="text" class="lib-search" placeholder="搜索材质..." id="materialSearch">
         </div>
         <div class="lib-items">
-          <div class="lib-item active" data-folder="all"><span class="caret" style="transform:none;">▼</span><span class="icon obj"></span><span>所有材质</span></div>
-          <div class="lib-item" data-folder="folder1"><span class="caret" style="transform:none;">▼</span><span class="icon obj"></span><span>测试子目录</span></div>
-          <div class="lib-item" data-folder="folder2"><span class="caret" style="transform:none;">▼</span><span class="icon obj"></span><span>测试子目录2</span></div>
+          <div class="lib-item active" data-folder="all">
+            <span class="caret" style="transform:none;">▼</span>
+            <span class="icon obj"></span>
+            <span>所有材质</span>
+          </div>
+          <div class="lib-folder" data-folder="folder1">
+            <div class="lib-item folder-item" data-folder="folder1">
+              <span class="caret">▶</span>
+              <span class="icon folder"></span>
+              <span>测试子目录</span>
+            </div>
+          </div>
+          <div class="lib-folder" data-folder="folder2">
+            <div class="lib-item folder-item" data-folder="folder2">
+              <span class="caret">▶</span>
+              <span class="icon folder"></span>
+              <span>测试子目录2</span>
+            </div>
+          </div>
         </div>
       </div>
       <div class="assets">

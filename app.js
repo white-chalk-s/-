@@ -256,7 +256,15 @@
     });
 
     // 材质库目录
-    document.querySelectorAll(".lib-item").forEach(item => {
+    document.querySelectorAll(".lib-folder .folder-item").forEach(item => {
+      item.addEventListener("click", function (e) {
+        e.stopPropagation();
+        const folder = this.closest(".lib-folder");
+        folder.classList.toggle("collapsed");
+      });
+    });
+
+    document.querySelectorAll(".lib-item:not(.folder-item)").forEach(item => {
       item.addEventListener("click", function () {
         document.querySelectorAll(".lib-item").forEach(i => i.classList.remove("active"));
         item.classList.add("active");
