@@ -135,11 +135,28 @@
     </aside>
 
     <div class="topbar">
-      <div class="top-center">
-        <button class="btn" id="saveBtn" type="button">保存</button>
-        <button class="btn" id="importBtn" type="button">导入</button>
-        <button class="btn primary" id="exportBtn" type="button">导出</button>
-        <button class="btn ghost" id="resetBtn" type="button">重置</button>
+      <div class="toolbar">
+        <div class="tool-group">
+          <div class="tool-group-title">场景</div>
+          <div class="tool-btn-container">
+            <button class="btn" id="saveBtn" type="button">保存</button>
+            <button class="btn" id="importBtn" type="button">导入</button>
+            <button class="btn" id="exportBtn" type="button">导出</button>
+            <button class="btn" id="clearBtn" type="button">清空场景</button>
+          </div>
+        </div>
+        <div class="tool-group" style="border-right:none">
+          <div class="tool-group-title">编辑</div>
+          <div class="tool-btn-container">
+            <button class="btn" type="button">撤销</button>
+            <button class="btn" type="button">重做</button>
+            <button class="btn" type="button">复制</button>
+            <button class="btn" type="button">删除</button>
+            <button class="btn" type="button">锁定/解锁</button>
+            <button class="btn" type="button">隐藏/显示</button>
+            <button class="btn" type="button">聚焦</button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -319,6 +336,7 @@
               <div class="map-preview-wrap">
                 <div class="map-preview" id="preview-colorMap" data-map="colorMap">
                   <span class="map-placeholder">无</span>
+                  <span class="edit-icon">✏️</span>
                 </div>
               </div>
 
@@ -326,6 +344,7 @@
               <div class="map-preview-wrap">
                 <div class="map-preview" id="preview-normalMap" data-map="normalMap">
                   <span class="map-placeholder">无</span>
+                  <span class="edit-icon">✏️</span>
                 </div>
               </div>
 
@@ -333,6 +352,7 @@
               <div class="map-preview-wrap">
                 <div class="map-preview" id="preview-roughMap" data-map="roughMap">
                   <span class="map-placeholder">无</span>
+                  <span class="edit-icon">✏️</span>
                 </div>
               </div>
 
@@ -340,6 +360,7 @@
               <div class="map-preview-wrap">
                 <div class="map-preview" id="preview-metalMap" data-map="metalMap">
                   <span class="map-placeholder">无</span>
+                  <span class="edit-icon">✏️</span>
                 </div>
               </div>
 
@@ -347,6 +368,7 @@
               <div class="map-preview-wrap">
                 <div class="map-preview" id="preview-emissiveMap" data-map="emissiveMap">
                   <span class="map-placeholder">无</span>
+                  <span class="edit-icon">✏️</span>
                 </div>
               </div>
 
@@ -354,6 +376,7 @@
               <div class="map-preview-wrap">
                 <div class="map-preview" id="preview-opacityMap" data-map="opacityMap">
                   <span class="map-placeholder">无</span>
+                  <span class="edit-icon">✏️</span>
                 </div>
               </div>
 
@@ -361,6 +384,53 @@
               <div class="map-preview-wrap">
                 <div class="map-preview" id="preview-envMap" data-map="envMap">
                   <span class="map-placeholder">无</span>
+                  <span class="edit-icon">✏️</span>
+                </div>
+              </div>
+            </div>
+            <button class="uv-setting-toggle" id="uvSettingToggle" onclick="console.log('clicked');document.getElementById('uvSettingPanel').style.display = document.getElementById('uvSettingPanel').style.display === 'none' ? 'block' : 'none'">贴图设置</button>
+            <div class="uv-setting-panel" id="uvSettingPanel" style="display:none">
+              <div class="setting-title">UV设置</div>
+              <div class="setting-row">
+                <div class="form-label">重复</div>
+                <div class="form-control">
+                  <div class="number-input-group"><input type="text" value="1"><div class="spinner-btns"><div class="spinner-btn up"></div><div class="spinner-divider"></div><div class="spinner-btn down"></div></div></div>
+                  <span class="separator">x</span>
+                  <div class="number-input-group"><input type="text" value="1"><div class="spinner-btns"><div class="spinner-btn up"></div><div class="spinner-divider"></div><div class="spinner-btn down"></div></div></div>
+                </div>
+              </div>
+              <div class="setting-row">
+                <div class="form-label">偏移</div>
+                <div class="form-control">
+                  <div class="number-input-group"><input type="text" value="0"><div class="spinner-btns"><div class="spinner-btn up"></div><div class="spinner-divider"></div><div class="spinner-btn down"></div></div></div>
+                  <span class="separator">x</span>
+                  <div class="number-input-group"><input type="text" value="0"><div class="spinner-btns"><div class="spinner-btn up"></div><div class="spinner-divider"></div><div class="spinner-btn down"></div></div></div>
+                </div>
+              </div>
+              <div class="setting-row">
+                <div class="form-label">中心</div>
+                <div class="form-control">
+                  <div class="number-input-group"><input type="text" value="0"><div class="spinner-btns"><div class="spinner-btn up"></div><div class="spinner-divider"></div><div class="spinner-btn down"></div></div></div>
+                  <span class="separator">x</span>
+                  <div class="number-input-group"><input type="text" value="0"><div class="spinner-btns"><div class="spinner-btn up"></div><div class="spinner-divider"></div><div class="spinner-btn down"></div></div></div>
+                </div>
+              </div>
+              <div class="setting-row">
+                <div class="form-label">旋转</div>
+                <div class="form-control">
+                  <div class="number-input-group"><input type="text" value="0"><div class="spinner-btns"><div class="spinner-btn up"></div><div class="spinner-divider"></div><div class="spinner-btn down"></div></div></div>
+                </div>
+              </div>
+              <div class="setting-row">
+                <div class="form-label">wrapS</div>
+                <div class="form-control">
+                  <div class="select-wrapper"><select><option>RepeatWrapping</option><option>ClampToEdgeWrapping</option><option>MirroredRepeatWrapping</option></select></div>
+                </div>
+              </div>
+              <div class="setting-row">
+                <div class="form-label">wrapT</div>
+                <div class="form-control">
+                  <div class="select-wrapper"><select><option>RepeatWrapping</option><option>ClampToEdgeWrapping</option><option>MirroredRepeatWrapping</option></select></div>
                 </div>
               </div>
             </div>
@@ -448,6 +518,51 @@
       </div>
       <div class="map-modal-body">
         <img id="modalImg" src="" alt="贴图预览">
+        <div class="map-modal-settings" id="modalSettings" style="display:none">
+          <div class="setting-title">UV设置</div>
+          <div class="setting-row">
+            <div class="form-label">重复</div>
+            <div class="form-control">
+              <div class="number-input-group"><input type="text" value="1"><div class="spinner-btns"><div class="spinner-btn up"></div><div class="spinner-divider"></div><div class="spinner-btn down"></div></div></div>
+              <span class="separator">x</span>
+              <div class="number-input-group"><input type="text" value="1"><div class="spinner-btns"><div class="spinner-btn up"></div><div class="spinner-divider"></div><div class="spinner-btn down"></div></div></div>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="form-label">偏移</div>
+            <div class="form-control">
+              <div class="number-input-group"><input type="text" value="0"><div class="spinner-btns"><div class="spinner-btn up"></div><div class="spinner-divider"></div><div class="spinner-btn down"></div></div></div>
+              <span class="separator">x</span>
+              <div class="number-input-group"><input type="text" value="0"><div class="spinner-btns"><div class="spinner-btn up"></div><div class="spinner-divider"></div><div class="spinner-btn down"></div></div></div>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="form-label">中心</div>
+            <div class="form-control">
+              <div class="number-input-group"><input type="text" value="0"><div class="spinner-btns"><div class="spinner-btn up"></div><div class="spinner-divider"></div><div class="spinner-btn down"></div></div></div>
+              <span class="separator">x</span>
+              <div class="number-input-group"><input type="text" value="0"><div class="spinner-btns"><div class="spinner-btn up"></div><div class="spinner-divider"></div><div class="spinner-btn down"></div></div></div>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="form-label">旋转</div>
+            <div class="form-control">
+              <div class="number-input-group"><input type="text" value="0"><div class="spinner-btns"><div class="spinner-btn up"></div><div class="spinner-divider"></div><div class="spinner-btn down"></div></div></div>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="form-label">wrapS</div>
+            <div class="form-control">
+              <div class="select-wrapper"><select><option>RepeatWrapping</option><option>ClampToEdgeWrapping</option><option>MirroredRepeatWrapping</option></select></div>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="form-label">wrapT</div>
+            <div class="form-control">
+              <div class="select-wrapper"><select><option>RepeatWrapping</option><option>ClampToEdgeWrapping</option><option>MirroredRepeatWrapping</option></select></div>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="map-modal-footer">
         <button class="map-modal-reset" id="modalReset">重置</button>
@@ -455,6 +570,7 @@
           <input type="file" id="fileInput" accept="image/*" style="display:none">
           选择
         </label>
+        <button class="map-modal-setting" id="modalSetting" style="display:none">设置</button>
         <button class="map-modal-confirm" id="modalConfirm">确定</button>
       </div>
     </div>

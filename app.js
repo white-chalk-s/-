@@ -320,23 +320,151 @@
     // 默认展开"所有材质"文件夹
     document.querySelector('.lib-folder[data-folder="all"]')?.classList.remove("collapsed");
 
-    // 顶部按钮
+    // 场景按钮
     document.getElementById("saveBtn").addEventListener("click", function () {
-      alert("原型演示：已保存设备材质配置");
+      // 收集当前所有面的材质配置
+      const config = {
+        faces: state,
+        timestamp: new Date().toISOString()
+      };
+      console.log("保存配置:", config);
+      // 模拟保存到本地存储
+      localStorage.setItem("deviceMaterialConfig", JSON.stringify(config));
+      alert("已保存设备材质配置");
     });
 
     document.getElementById("importBtn").addEventListener("click", function () {
-      alert("原型演示：打开导入材质文件对话框");
+      // 创建一个隐藏的文件输入框
+      const input = document.createElement("input");
+      input.type = "file";
+      input.accept = ".json";
+      input.onchange = function(e) {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function(event) {
+            try {
+              const config = JSON.parse(event.target.result);
+              if (config.faces) {
+                // 恢复配置
+                Object.keys(config.faces).forEach(key => {
+                  if (state[key]) {
+                    state[key] = { ...state[key], ...config.faces[key] };
+                  }
+                });
+                renderAllFaces();
+                alert("已导入材质配置");
+              }
+            } catch(err) {
+              alert("导入失败：文件格式错误");
+            }
+          };
+          reader.readAsText(file);
+        }
+      };
+      input.click();
     });
 
     document.getElementById("exportBtn").addEventListener("click", function () {
-      alert("原型演示：已执行导出设备模型");
+      const config = {
+        faces: state,
+        timestamp: new Date().toISOString()
+      };
+      const blob = new Blob([JSON.stringify(config, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "device-material-config.json";
+      a.click();
+      URL.revokeObjectURL(url);
+      alert("已导出设备材质配置");
     });
 
-    document.getElementById("resetBtn").addEventListener("click", function () {
-      if(confirm("确定要重置所有设置吗？")){
-        alert("原型演示：已重置所有设置");
+    document.getElementById("clearBtn").addEventListener("click", function () {
+      if (confirm("确定要清空场景吗？此操作不可恢复。")) {
+        // 重置所有面的配置
+        Object.keys(state).forEach(key => {
+          state[key] = {
+            materialName: "无",
+            color: "#808080",
+            nodeTitle: "",
+            path: "",
+            roughness: "0.5",
+            metalness: "0.0"
+          };
+        });
+        // 清空贴图
+        Object.keys(mapData).forEach(key => {
+          mapData[key] = null;
+        });
+        // 更新UI
+        document.querySelectorAll(".map-preview").forEach(preview => {
+          preview.innerHTML = '<span class="map-placeholder">无</span>';
+          preview.classList.remove("has-img");
+        });
+        renderAllFaces();
+        alert("已清空场景");
       }
+    });
+
+    // 编辑按钮
+    const editButtons = document.querySelectorAll(".tool-group:last-child .tool-btn-container .btn");
+    editButtons.forEach(btn => {
+      btn.addEventListener("click", function() {
+        const text = btn.textContent;
+        switch(text) {
+          case "撤销":
+            alert("撤销操作");
+            break;
+          case "重做":
+            alert("重做操作");
+            break;
+          case "复制":
+            if (selectedFace) {
+              // 复制当前面的材质到剪贴板
+              const copyData = { ...state[selectedFace] };
+              localStorage.setItem("materialCopy", JSON.stringify(copyData));
+              alert("已复制材质: " + copyData.materialName);
+            } else {
+              alert("请先选择一个面");
+            }
+            break;
+          case "删除":
+            if (selectedFace) {
+              if (confirm("确定要删除当前材质吗？")) {
+                state[selectedFace].materialName = "无";
+                state[selectedFace].color = "#808080";
+                renderFace(selectedFace);
+                alert("已删除材质");
+              }
+            } else {
+              alert("请先选择一个面");
+            }
+            break;
+          case "锁定/解锁":
+            alert("锁定/解锁功能");
+            break;
+          case "隐藏/显示":
+            if (selectedFace) {
+              const faceEl = document.querySelector('.face[data-face="' + selectedFace + '"]');
+              faceEl.classList.toggle("hidden-face");
+              alert("切换显隐状态");
+            } else {
+              alert("请先选择一个面");
+            }
+            break;
+          case "聚焦":
+            if (selectedFace) {
+              const faceEl = document.querySelector('.face[data-face="' + selectedFace + '"]');
+              faceEl.classList.add("focused-face");
+              setTimeout(() => faceEl.classList.remove("focused-face"), 1500);
+              alert("已聚焦到: " + selectedFace);
+            } else {
+              alert("请先选择一个面");
+            }
+            break;
+        }
+      });
     });
 
     // 贴图预览弹窗
@@ -375,9 +503,41 @@
 
         if (mapData[currentMapType]) {
           modalImg.src = mapData[currentMapType];
+          // 有贴图时显示设置按钮
+          document.getElementById("modalSetting").style.display = "inline-flex";
+          // 隐藏设置面板
+          document.getElementById("modalSettings").classList.remove("show");
         } else {
           modalImg.src = "";
+          document.getElementById("modalSetting").style.display = "none";
         }
+        mapModal.classList.add("show");
+      });
+    });
+
+    // 点击弹窗中的设置按钮展开/收起配置面板
+    const settingBtn = document.getElementById("modalSetting");
+    settingBtn.addEventListener("click", function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      const panel = document.getElementById("modalSettings");
+      if (panel.style.display === "none" || panel.style.display === "") {
+        panel.style.display = "block";
+      } else {
+        panel.style.display = "none";
+      }
+    });
+
+    // 环境贴图的设置按钮点击 - 打开UV配置弹窗
+    document.querySelectorAll(".map-setting-btn").forEach(btn => {
+      btn.addEventListener("click", function(e) {
+        e.stopPropagation();
+        const mapType = this.dataset.map;
+        currentMapType = mapType;
+        modalTitle.textContent = mapNames[mapType] || "贴图设置";
+        modalImg.src = mapData[mapType] || "";
+        document.getElementById("modalSetting").style.display = "inline-flex";
+        document.getElementById("modalSettings").style.display = "none";
         mapModal.classList.add("show");
       });
     });
@@ -415,6 +575,11 @@
           preview.innerHTML = '<img src="' + mapData[currentMapType] + '">';
           preview.classList.add("has-img");
           modalImg.src = mapData[currentMapType];
+          // 显示弹窗中的设置按钮
+          document.getElementById("modalSetting").style.display = "inline-flex";
+          // 显示对应贴图的设置按钮
+          const settingBtn = document.querySelector('.map-setting-btn[data-map="' + currentMapType + '"]');
+          if (settingBtn) settingBtn.style.display = "block";
         };
         reader.readAsDataURL(file);
       }
@@ -424,6 +589,37 @@
     modalConfirm.addEventListener("click", function() {
       mapModal.classList.remove("show");
     });
+
+    // UV配置按钮 - 环境贴图专用
+    document.getElementById("uvConfigBtn").addEventListener("click", function() {
+      currentMapType = "envMap";
+      modalTitle.textContent = "环境贴图 - UV配置";
+      if (mapData["envMap"]) {
+        modalImg.src = mapData["envMap"];
+        document.getElementById("modalSetting").style.display = "inline-flex";
+      } else {
+        modalImg.src = "";
+        document.getElementById("modalSetting").style.display = "none";
+      }
+      document.getElementById("modalSettings").style.display = "none";
+      mapModal.classList.add("show");
+    });
+
+    // 材质贴图面板底部的贴图设置按钮
+    const toggleBtn = document.getElementById("uvSettingToggle");
+    const panel = document.getElementById("uvSettingPanel");
+    if (toggleBtn) {
+      toggleBtn.addEventListener("click", function() {
+        console.log("贴图设置按钮点击了");
+        if (panel.style.display === "none" || panel.style.display === "") {
+          panel.style.display = "block";
+        } else {
+          panel.style.display = "none";
+        }
+      });
+    } else {
+      console.log("按钮不存在");
+    }
 
     // 初始化
     renderAllFaces();
